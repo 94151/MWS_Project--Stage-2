@@ -1,26 +1,3 @@
- if(window.indexedDB){
-   let request = indexedDB.open("Comics", 1);
-
-   request.onerror = function(e){
-     console.log(e);
-   }
-
-    request.onupgradeneeded = function(e){
-    var db = e.target.result;
-    var objectStore = db.createObjectStore("comics", {keyPath: "id"});
-    objectStore.createIndex("neighborhood", "neighborhood", {unique: false});
-    objectStore.transaction.oncomplete = function(e) {
-      var store = db.transaction(["comics"], "readwrite").objectStore("comics");
-      restaurants.forEach(function (restaurant) {
-        store.put(restaurant);
-      });
-    }
-  }
-
-   request.onsuccess = function(e){
-     console.log("success");
-   }
- }
 
 
 /**
@@ -37,6 +14,32 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
   
+  static indexDB(restaurants) {
+    if(window.indexedDB){
+      let request = indexedDB.open("Comics", 1);
+   
+      request.onerror = function(e){
+        console.log(e);
+      }
+   
+       request.onupgradeneeded = function(e){
+       var db = e.target.result;
+       var objectStore = db.createObjectStore("comics", {keyPath: "id"});
+       objectStore.createIndex("neighborhood", "neighborhood", {unique: false});
+       objectStore.transaction.oncomplete = function(e) {
+         var store = db.transaction(["comics"], "readwrite").objectStore("comics");
+         restaurants.forEach(function (restaurant) {
+           store.put(restaurant);
+         });
+       }
+     }
+   
+      request.onsuccess = function(e){
+        console.log("success");
+      }
+    }
+   
+  }
   
   /**
    * Fetch all restaurants.
@@ -59,6 +62,7 @@ class DBHelper {
     .then(response => {
       response.json().then(restaurants => {
         console.log("restaurant JSON: ", restaurants);
+        DBHelper.indexDB(restaurants);
         callback(null, restaurants);
          
       });
