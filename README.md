@@ -11,3 +11,5 @@
 3. dbhelper.js
        - added indexed db to store data. 
        
+![performance](https://user-images.githubusercontent.com/17044000/46258943-ae949100-c4ef-11e8-8f92-9b5c58a1bc50.PNG)
+       
